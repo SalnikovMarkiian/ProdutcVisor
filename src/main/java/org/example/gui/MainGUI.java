@@ -61,4 +61,5 @@ public class MainGUI {
         frame.setVisible(true);
         updateProductList();
     }
+
 }

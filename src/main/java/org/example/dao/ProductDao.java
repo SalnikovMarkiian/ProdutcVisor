@@ -10,4 +10,10 @@ public interface ProductDao {
     Product get(Long id);
 
     List<Product> getAll();
+
+    void remove(Product product);
+
+    public void update(Product product);
+
+    public Product getProductByName(String name);
 }

@@ -8,8 +8,8 @@ import javax.swing.*;
 
 public class CrudGUI {
     private JFrame frame;
-    private JTextField fieldName, fiedlQuantity;
-    private JButton addButton, deleteButton, editButton;
+    private JTextField fieldName, fieldQuantity;
+    private JButton addButton, deleteButton, editButton, returnButton;
     private ProductDao productDAO;
     private MainGUI mainGUI;
 
@@ -19,42 +19,45 @@ public class CrudGUI {
         productDAO = new ProductDaoImpl();
 
         fieldName = new JTextField(20);
-        fiedlQuantity = new JTextField(20);
+        fieldQuantity = new JTextField(20);
 
         addButton = new JButton("Додати товар");
         deleteButton = new JButton("Видалити товар");
         editButton = new JButton("Редагувати товар");
+        returnButton = new JButton("Повернутися на головне вікно");
+
 
         addButton.addActionListener(e -> {
-            Product product = new Product();
-            product.setName(fieldName.getText());
-            product.setQuantity(Integer.parseInt(fiedlQuantity.getText()));
-            productDAO.create(product);
-            fieldName.setText("");
-            fiedlQuantity.setText("");
-            updateProductList(); // Оновлення списку після додавання товару
+            new AddProductWindow(productDAO);
+            updateProductList();
         });
 
+        deleteButton.addActionListener(e -> {
+            new DeleteProductWindow(productDAO);
+            updateProductList();
+        });
 
-        addButton.addActionListener(e -> {
-            Product product = new Product();
-            product.setName(fieldName.getText());
-            product.setQuantity(Integer.parseInt(fiedlQuantity.getText()));
-            productDAO.create(product);
-            fieldName.setText("");
-            fiedlQuantity.setText("");
+        editButton.addActionListener(e -> {
+            new EditProductWindow(productDAO);
+            updateProductList();
         });
 
         // Додайте функціональність для deleteButton та editButton
+
+        returnButton.addActionListener(e -> {
+            closeGUI();
+            mainGUI.showGUI(); // Повернення на головне вікно
+        });
 
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
         frame.add(new JLabel("Назва:"));
         frame.add(fieldName);
         frame.add(new JLabel("Кількість:"));
-        frame.add(fiedlQuantity);
+        frame.add(fieldQuantity);
         frame.add(addButton);
         frame.add(deleteButton);
         frame.add(editButton);
+        frame.add(returnButton);
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
@@ -66,5 +69,9 @@ public class CrudGUI {
 
     public void showGUI() {
         frame.setVisible(true);
+    }
+
+    public void closeGUI() {
+        frame.dispose();
     }
 }
