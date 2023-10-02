@@ -47,11 +47,9 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", serialNumber='" + serialNumber + '\'' +
-                '}';
+        return  "| serialNumber=" + serialNumber  +
+                "| name='" + name + '\'' + " |" +
+                " quantity=" + quantity +
+                " |";
     }
 }

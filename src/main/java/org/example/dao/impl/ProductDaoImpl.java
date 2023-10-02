@@ -144,15 +144,13 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> searchProducts(String keyword) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         EntityManager entityManager = null;
-        EntityTransaction entityTransaction = null;
         try {
             entityManager = sessionFactory.openSession();
             entityManager.getTransaction().begin();
 
-            // Використовуємо параметрізований запит для пошуку за назвою або серійним номером
             TypedQuery<Product> query = entityManager.createQuery(
                     "FROM Product WHERE name LIKE :keyword OR serialNumber LIKE :keyword", Product.class);
-            query.setParameter("keyword", "%" + keyword + "%"); // Використовуємо оператор LIKE для часткового збігу
+            query.setParameter("keyword", "%" + keyword + "%");
 
             List<Product> searchResults = query.getResultList();
             entityManager.getTransaction().commit();

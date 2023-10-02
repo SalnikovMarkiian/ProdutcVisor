@@ -2,7 +2,6 @@ package org.example.gui;
 
 import org.example.dao.ProductDao;
 import org.example.dao.impl.ProductDaoImpl;
-import org.example.gui.EditProductWindow;
 import org.example.model.Product;
 
 import javax.swing.*;
