@@ -122,4 +122,51 @@ public class ProductDaoImpl implements ProductDao {
             }
         }
     }
+
+    @Override
+    public Product getProductBySerialNumber(String serialNumber) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (EntityManager entityManager = sessionFactory.openSession()) {
+            TypedQuery<Product> query = entityManager.createQuery(
+                    "FROM Product WHERE serialNumber = :serialNumber", Product.class);
+            query.setParameter("serialNumber", serialNumber);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            // Якщо товар не знайдено, повертаємо null
+            return null;
+        } catch (Exception e) {
+            throw new DataProcessingException(
+                    "Can not get product by serial number: " + serialNumber, e);
+        }
+    }
+
+    @Override
+    public List<Product> searchProducts(String keyword) {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        try {
+            entityManager = sessionFactory.openSession();
+            entityManager.getTransaction().begin();
+
+            // Використовуємо параметрізований запит для пошуку за назвою або серійним номером
+            TypedQuery<Product> query = entityManager.createQuery(
+                    "FROM Product WHERE name LIKE :keyword OR serialNumber LIKE :keyword", Product.class);
+            query.setParameter("keyword", "%" + keyword + "%"); // Використовуємо оператор LIKE для часткового збігу
+
+            List<Product> searchResults = query.getResultList();
+            entityManager.getTransaction().commit();
+
+            return searchResults;
+        } catch (Exception e) {
+            if (entityManager != null && entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            throw new DataProcessingException("Error while searching for products: " + e.getMessage(), e);
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+    }
 }

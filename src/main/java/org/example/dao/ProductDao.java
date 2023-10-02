@@ -16,4 +16,8 @@ public interface ProductDao {
     public void update(Product product);
 
     public Product getProductByName(String name);
+
+    Product getProductBySerialNumber(String serialNumber);
+
+    List<Product> searchProducts(String keyword);
 }

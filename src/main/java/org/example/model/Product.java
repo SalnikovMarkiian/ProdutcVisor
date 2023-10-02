@@ -10,6 +10,8 @@ public class Product {
     private int id;
     private String name;
     private int quantity;
+    @Column(unique = true)
+    private String serialNumber;
 
     public int getId() {
         return id;
@@ -33,5 +35,23 @@ public class Product {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", serialNumber='" + serialNumber + '\'' +
+                '}';
     }
 }
