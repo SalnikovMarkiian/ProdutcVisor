@@ -17,6 +17,8 @@ public interface ProductDao {
 
     public Product getProductByName(String name);
 
+    int getMaxId();
+
     Product getProductBySerialNumber(String serialNumber);
 
     List<Product> searchProducts(String keyword);

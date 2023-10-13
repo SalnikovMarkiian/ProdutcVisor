@@ -96,14 +96,15 @@ public class MainGUI {
             } else {
                 JOptionPane.showMessageDialog(null, "Виберіть товар для редагування.");
             }
+            updateProductList();
         });
 
         createButton.addActionListener(e -> {
             String name = JOptionPane.showInputDialog("Введіть назву товару:");
-            String serialNumber = JOptionPane.showInputDialog("Введіть серійний номер товару:");
+            int serialNumber = setSerialNumber();
             try {
                 int quantity = Integer.parseInt(JOptionPane.showInputDialog("Введіть кількість товару:"));
-                Product existingProduct = productDao.getProductBySerialNumber(serialNumber);
+                Product existingProduct = productDao.getProductByName(name);
                 if (existingProduct == null) {
                     Product newProduct = new Product();
                     newProduct.setName(name);
@@ -163,6 +164,14 @@ public class MainGUI {
     private void updateProductList() {
         List<Product> products = productDao.getAll();
         updateProductList(products);
+    }
+
+    private int setSerialNumber() {
+        if (productDao.getAll().isEmpty()) {
+            return 0;
+        }
+        return productDao.getMaxId();
+
     }
 
     public static void main(String[] args) {

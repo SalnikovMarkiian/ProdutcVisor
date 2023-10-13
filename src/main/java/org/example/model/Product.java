@@ -11,7 +11,7 @@ public class Product {
     private String name;
     private int quantity;
     @Column(unique = true)
-    private String serialNumber;
+    private int serialNumber;
 
     public int getId() {
         return id;
@@ -37,11 +37,11 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public String getSerialNumber() {
+    public int getSerialNumber() {
         return serialNumber;
     }
 
-    public void setSerialNumber(String serialNumber) {
+    public void setSerialNumber(int serialNumber) {
         this.serialNumber = serialNumber;
     }
 

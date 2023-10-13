@@ -5,6 +5,7 @@ import org.example.dao.ProductDao;
 import org.example.exception.DataProcessingException;
 import org.example.model.Product;
 import org.example.util.HibernateUtil;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class ProductDaoImpl implements ProductDao {
                     "Can not get product by id " + id + " from DB ", e);
         }
     }
+
 
     @Override
     public List<Product> getAll() {
@@ -122,6 +124,18 @@ public class ProductDaoImpl implements ProductDao {
             }
         }
     }
+    @Override
+    public int getMaxId() {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+            Query query = session.createQuery("SELECT MAX(id) FROM Product", Integer.class);
+            Integer maxId = (Integer) query.getSingleResult();
+            return maxId != null ? maxId : 0;
+        } catch (Exception e) {
+            throw new DataProcessingException("Error while getting max id: " + e.getMessage(), e);
+        }
+    }
+
 
     @Override
     public Product getProductBySerialNumber(String serialNumber) {
