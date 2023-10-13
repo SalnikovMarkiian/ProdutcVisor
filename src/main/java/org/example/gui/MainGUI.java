@@ -17,13 +17,14 @@ public class MainGUI {
 
     public MainGUI(ProductDao productDao) {
         this.productDao = productDao;
-        frame = new JFrame("Список товарів");
+        frame = new JFrame("Список");
         productListModel = new DefaultListModel<>();
         productList = new JList<>(productListModel);
 
         searchField = new JTextField(20);
         JButton searchButton = new JButton("Пошук");
         JButton cancelButton = new JButton("Скасувати пошук");
+        JButton updateButton = new JButton("Оновити");
 
         searchButton.addActionListener(e -> {
             String keyword = searchField.getText().trim();
@@ -38,17 +39,24 @@ public class MainGUI {
             updateProductList();
         });
 
+        updateButton.addActionListener(e -> {
+            updateProductList();
+        });
+
         JPanel searchPanel = new JPanel();
         searchPanel.add(new JLabel("Пошук:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         searchPanel.add(cancelButton);
+        searchPanel.add(updateButton);
 
-        JButton addButton = new JButton("Додати товар");
-        JButton subtractButton = new JButton("Відняти товар");
-        JButton editButton = new JButton("Редагувати товар");
-        JButton createButton = new JButton("Створити товар");
-        JButton deleteButton = new JButton("Видалити товар");
+
+
+        JButton addButton = new JButton("Додати");
+        JButton subtractButton = new JButton("Відняти");
+        JButton editButton = new JButton("Редагувати елемент");
+        JButton createButton = new JButton("Створити новий елемент");
+        JButton deleteButton = new JButton("Видалити повністю");
 
         addButton.addActionListener(e -> {
             Product selectedProduct = productList.getSelectedValue();
@@ -63,7 +71,7 @@ public class MainGUI {
                     JOptionPane.showMessageDialog(null, "Невірний формат введених даних.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Виберіть товар для додавання.");
+                JOptionPane.showMessageDialog(null, "Виберіть елемент для додавання.");
             }
         });
 
@@ -78,13 +86,13 @@ public class MainGUI {
                         productDao.update(selectedProduct);
                         updateProductList();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Недостатньо товару на складі.");
+                        JOptionPane.showMessageDialog(null, "Недостатньо одиниць на складі.");
                     }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, "Невірний формат введених даних.");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Виберіть товар для віднімання.");
+                JOptionPane.showMessageDialog(null, "Виберіть елемент для віднімання.");
             }
         });
 
@@ -94,16 +102,16 @@ public class MainGUI {
                 new EditProductWindow(productDao, selectedProduct);
                 updateProductList();
             } else {
-                JOptionPane.showMessageDialog(null, "Виберіть товар для редагування.");
+                JOptionPane.showMessageDialog(null, "Виберіть елемент для редагування.");
             }
             updateProductList();
         });
 
         createButton.addActionListener(e -> {
-            String name = JOptionPane.showInputDialog("Введіть назву товару:");
+            String name = JOptionPane.showInputDialog("Введіть назву:");
             int serialNumber = setSerialNumber();
             try {
-                int quantity = Integer.parseInt(JOptionPane.showInputDialog("Введіть кількість товару:"));
+                int quantity = Integer.parseInt(JOptionPane.showInputDialog("Введіть кількість:"));
                 Product existingProduct = productDao.getProductByName(name);
                 if (existingProduct == null) {
                     Product newProduct = new Product();
@@ -113,7 +121,7 @@ public class MainGUI {
                     productDao.create(newProduct);
                     updateProductList();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Товар з таким серійним номером вже існує.");
+                    JOptionPane.showMessageDialog(null, "Такий елемент вже існує.");
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Невірний формат введених даних.");
@@ -123,13 +131,16 @@ public class MainGUI {
         deleteButton.addActionListener(e -> {
             Product selectedProduct = productList.getSelectedValue();
             if (selectedProduct != null) {
-                int confirm = JOptionPane.showConfirmDialog(null, "Ви впевнені, що хочете видалити товар?");
+                int confirm = JOptionPane.showConfirmDialog(null,
+                        "Ви впевнені, що хочете видалити "
+                                + selectedProduct.getName()
+                                +" ?");
                 if (confirm == JOptionPane.YES_OPTION) {
                     productDao.remove(selectedProduct);
                     updateProductList();
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Виберіть товар для видалення.");
+                JOptionPane.showMessageDialog(null, "Виберіть елемент для видалення.");
             }
         });
 
@@ -150,7 +161,9 @@ public class MainGUI {
         frame.pack();
         frame.setVisible(true);
         updateProductList();
+
     }
+
 
     // Оновлений метод оновлення списку товарів
     private void updateProductList(List<Product> products) {

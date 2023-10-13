@@ -12,7 +12,7 @@ public class EditProductWindow {
     private JFrame frame;
 
     public EditProductWindow(ProductDao productDao, Product product) {
-        frame = new JFrame("Редагувати товар");
+        frame = new JFrame("Редагувати одиницю");
         nameField = new JTextField(product.getName(), 20);
         quantityField = new JTextField(String.valueOf(product.getQuantity()), 20);
         JButton editButton = new JButton("Зберегти зміни");
@@ -24,7 +24,7 @@ public class EditProductWindow {
             product.setQuantity(quantity);
             productDao.update(product);
             // Вивід повідомлення про успішне редагування
-            JOptionPane.showMessageDialog(null, "Товар відредаговано успішно");
+            JOptionPane.showMessageDialog(null, "Не забудь оновити список!");
             // Закриття вікна після редагування
             frame.dispose();
         });
